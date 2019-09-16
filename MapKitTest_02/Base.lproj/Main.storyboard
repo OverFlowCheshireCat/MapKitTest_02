@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13122.16" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13104.12"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -9,16 +13,60 @@
         <!--View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="ViewController" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="MapKitTest_02" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="hjl-6B-xW1">
+                                <rect key="frame" x="0.0" y="20" width="375" height="603"/>
+                            </mapView>
+                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ydi-4I-GXE">
+                                <rect key="frame" x="0.0" y="623" width="375" height="44"/>
+                                <items>
+                                    <barButtonItem title="Hybrid" id="X4m-DB-b5M">
+                                        <connections>
+                                            <action selector="changeHybrid:" destination="BYZ-38-t0r" id="TRd-15-XS7"/>
+                                        </connections>
+                                    </barButtonItem>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="ZZz-UV-o3C"/>
+                                    <barButtonItem title="Standard" id="6J1-2g-M5w">
+                                        <connections>
+                                            <action selector="changeStandard:" destination="BYZ-38-t0r" id="k2F-Ez-sJG"/>
+                                        </connections>
+                                    </barButtonItem>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="pn7-bX-R93"/>
+                                    <barButtonItem title="Satellite" id="Y2e-3r-Q7m">
+                                        <connections>
+                                            <action selector="changeSatellite:" destination="BYZ-38-t0r" id="zsq-Ha-Jed"/>
+                                        </connections>
+                                    </barButtonItem>
+                                </items>
+                            </toolbar>
+                        </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="hjl-6B-xW1" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="6Kz-Q9-AQq"/>
+                            <constraint firstItem="Ydi-4I-GXE" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="8yU-Fo-zRv"/>
+                            <constraint firstItem="hjl-6B-xW1" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="EBJ-h3-rT3"/>
+                            <constraint firstItem="Ydi-4I-GXE" firstAttribute="top" secondItem="hjl-6B-xW1" secondAttribute="bottom" id="FVV-Hp-Dvh"/>
+                            <constraint firstItem="Ydi-4I-GXE" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" id="Pud-dh-TUU"/>
+                            <constraint firstItem="hjl-6B-xW1" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="bxe-1U-2wI"/>
+                            <constraint firstItem="Ydi-4I-GXE" firstAttribute="top" secondItem="hjl-6B-xW1" secondAttribute="bottom" id="cMg-Lq-imh"/>
+                            <constraint firstItem="Ydi-4I-GXE" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="jOJ-ce-jub"/>
+                        </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
+                    <connections>
+                        <outlet property="hybridBtn" destination="X4m-DB-b5M" id="Qsf-Qm-yjo"/>
+                        <outlet property="mapView" destination="hjl-6B-xW1" id="wMw-V2-yQG"/>
+                        <outlet property="satelliteBtn" destination="Y2e-3r-Q7m" id="C2g-0e-FxW"/>
+                        <outlet property="standardBtn" destination="6J1-2g-M5w" id="Rbw-HD-ma7"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
+            <point key="canvasLocation" x="117.59999999999999" y="133.5832083958021"/>
         </scene>
     </scenes>
 </document>

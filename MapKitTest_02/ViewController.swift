@@ -1,7 +1,7 @@
 import UIKit
 import MapKit
 
-class ViewController: UIViewController {
+class ViewController: UIViewController, MKMapViewDelegate {
 
     @IBOutlet weak var mapView: MKMapView!
 
@@ -12,21 +12,47 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let location = CLLocationCoordinate2D(latitude: 35.165841, longitude: 129.072530)
-        let region = MKCoordinateRegion(center: location, latitudinalMeters: 300, longitudinalMeters: 300)
+        mapView.delegate = self
         
-        let marker = MKPointAnnotation()
+        var annotation = Array<MKPointAnnotation>()
         
-        marker.coordinate = location
-        marker.title = "동의과학대학교"
-        marker.subtitle = "DIT"
+        let latitude:Array<Double> = [35.165841, 35.169536, 35.170081]
+        let longitude:Array<Double> = [129.072530, 129.072826, 129.076761]
+        let title:Array<String> = ["동의과학대학교", "부산여자대학교", "동의의료원"]
+        let subtitle:Array<String> = ["DIT", "BWU", "DH"]
         
-        mapView.addAnnotation(marker)
+        let length = (latitude.count - 1)
         
+        for i in 0...length {
+            let marker = MKPointAnnotation()
+            
+            marker.coordinate.latitude = latitude[i]
+            marker.coordinate.longitude = longitude[i]
+            marker.title = title[i]
+            marker.subtitle = subtitle[i]
+            
+            annotation.append(marker)
+        }
+        
+        mapView.showAnnotations(annotation, animated: true)
+            
         mapView.mapType = MKMapType.hybrid
         setEnables(hybrid: false, standard: true, satellite: true)
+    }
+    
+    public func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+        let identifier = "Annotation"
         
-        mapView.setRegion(region, animated: true)
+        var annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: identifier) as? MKPinAnnotationView
+        
+        if annotationView == nil {
+            annotationView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: identifier)
+            annotationView?.canShowCallout = true
+            annotationView?.pinTintColor = UIColor.orange
+            annotationView?.animatesDrop = true
+        }
+        
+        return annotationView
     }
     
     @IBAction func changeHybrid(_ sender: Any) {

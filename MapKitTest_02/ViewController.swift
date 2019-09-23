@@ -51,6 +51,12 @@ class ViewController: UIViewController, MKMapViewDelegate {
             annotationView?.canShowCallout = true
             annotationView?.pinTintColor = UIColor.orange
             annotationView?.animatesDrop = true
+            
+            let img = UIImageView(image: UIImage(named: "icon.png"))
+                
+            img.frame = CGRect(x: 0, y: 0, width: 30, height: 30)
+            
+            annotationView?.leftCalloutAccessoryView = img
             annotationView?.rightCalloutAccessoryView = UIButton(type: .detailDisclosure)
         } else {
             annotationView?.annotation = annotation

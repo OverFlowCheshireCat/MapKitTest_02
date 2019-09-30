@@ -52,7 +52,7 @@ class ViewController: UIViewController, MKMapViewDelegate {
             annotationView?.pinTintColor = UIColor.orange
             annotationView?.animatesDrop = true
             
-            let img = UIImageView(image: UIImage(named: "icon.png"))
+            let img = UIImageView(image: UIImage(named: "icon.jpeg"))
                 
             img.frame = CGRect(x: 0, y: 0, width: 30, height: 30)
             
@@ -63,6 +63,19 @@ class ViewController: UIViewController, MKMapViewDelegate {
         }
         
         return annotationView
+    }
+    
+    public func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
+        if (control.state.rawValue == 1) {
+        
+            let alert = UIAlertController(title: view.annotation?.title!, message: view.annotation?.subtitle!, preferredStyle: UIAlertController.Style.alert)
+            
+            let okAction = UIAlertAction(title: "확인", style: .destructive)
+        
+            alert.addAction(okAction)
+            
+            present(alert, animated: false, completion: nil)
+        }
     }
     
     @IBAction func changeHybrid(_ sender: Any) {

@@ -14,24 +14,21 @@ class ViewController: UIViewController, MKMapViewDelegate {
         
         mapView.delegate = self
         
-        var annotation = Array<MKPointAnnotation>()
+        var annotation = Array<MKAnnotation>()
         
-        let latitude:Array<Double> = [35.165841, 35.169536, 35.170081]
-        let longitude:Array<Double> = [129.072530, 129.072826, 129.076761]
-        let title:Array<String> = ["동의과학대학교", "부산여자대학교", "동의의료원"]
-        let subtitle:Array<String> = ["DIT", "BWU", "DH"]
+        let datas = NSArray(contentsOfFile: Bundle.main.path(forResource: "data", ofType: "plist")!)
         
-        let length = (latitude.count - 1)
-        
-        for i in 0...length {
-            let marker = MKPointAnnotation()
-            
-            marker.coordinate.latitude = latitude[i]
-            marker.coordinate.longitude = longitude[i]
-            marker.title = title[i]
-            marker.subtitle = subtitle[i]
-            
-            annotation.append(marker)
+        if let dataList = datas {
+            for data in dataList {
+                let latitude = (data as AnyObject).value(forKey: "latitude") as! Double
+                let longitude = (data as AnyObject).value(forKey: "longitude") as! Double
+                let title = (data as AnyObject).value(forKey: "title") as! String
+                let subtitle = (data as AnyObject).value(forKey: "subtitle") as! String
+                
+                let viewPoint = ViewPoint(coordinate: CLLocationCoordinate2D(latitude: latitude, longitude: longitude), title: title, subtitle: subtitle)
+                
+                annotation.append(viewPoint)
+            }
         }
         
         mapView.showAnnotations(annotation, animated: true)
@@ -52,9 +49,25 @@ class ViewController: UIViewController, MKMapViewDelegate {
             annotationView?.pinTintColor = UIColor.orange
             annotationView?.animatesDrop = true
             
-            let img = UIImageView(image: UIImage(named: "icon.jpeg"))
+            var imageData = "DIT.jpg"
+            var imageFrame = CGRect(x: 0, y: 0, width: 100, height: 30)
+            
+            let subtitle = annotation.subtitle
+            
+            if subtitle == "DIT" {
+                imageData = "DIT.jpg"
+                imageFrame = CGRect(x: 0, y: 0, width: 100, height: 30)
+            } else if subtitle == "BWU" {
+                imageData = "BWU.png"
+                imageFrame = CGRect(x: 0, y: 0, width: 100, height: 30)
+            } else {
+                imageData = "BGU.jpeg"
+                imageFrame = CGRect(x: 0, y: 0, width: 30, height: 30)
+            }
+            
+            let img = UIImageView(image: UIImage(named: imageData))
                 
-            img.frame = CGRect(x: 0, y: 0, width: 30, height: 30)
+            img.frame = imageFrame
             
             annotationView?.leftCalloutAccessoryView = img
             annotationView?.rightCalloutAccessoryView = UIButton(type: .detailDisclosure)
@@ -64,6 +77,31 @@ class ViewController: UIViewController, MKMapViewDelegate {
         
         return annotationView
     }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     public func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
         if (control.state.rawValue == 1) {

@@ -20,21 +20,53 @@ class ViewController: UIViewController, MKMapViewDelegate {
         
         if let dataList = datas {
             for data in dataList {
-                let latitude = (data as AnyObject).value(forKey: "latitude") as! Double
-                let longitude = (data as AnyObject).value(forKey: "longitude") as! Double
+                let address = (data as AnyObject).value(forKey: "address") as! String
                 let title = (data as AnyObject).value(forKey: "title") as! String
-                let subtitle = (data as AnyObject).value(forKey: "subtitle") as! String
                 
-                let viewPoint = ViewPoint(coordinate: CLLocationCoordinate2D(latitude: latitude, longitude: longitude), title: title, subtitle: subtitle)
+                let geoCoder = CLGeocoder()
                 
-                annotation.append(viewPoint)
+                geoCoder.geocodeAddressString(address, completionHandler: { (placemarks: [CLPlacemark]?, error: Error?) in
+                    if error != nil {
+                        return
+                    }
+                    
+                    if let placemarkList = placemarks {
+                        let latitude = placemarkList.first?.location?.coordinate.latitude
+                        let longitude = placemarkList.first?.location?.coordinate.longitude
+                        
+                        let geoCoderR = CLGeocoder()
+                        
+                        geoCoderR.reverseGeocodeLocation(CLLocation(latitude: latitude!, longitude: longitude!), completionHandler: { (placemarksR: [CLPlacemark]?, errorR: Error?) in
+                            if errorR != nil {
+                                return
+                            }
+                            
+                            if let placemarkListR = placemarksR {
+                                let country = placemarkListR.first?.country ?? "Empty"
+                                let administrativeArea = placemarkListR.first?.administrativeArea ?? "Empty"
+                                let locality = placemarkListR.first?.locality ?? "Empty"
+                                let name = placemarkListR.first?.name ?? "Empty"
+                                
+                                let subtitle = address + " (" + country + " " + administrativeArea + " " + locality + " " + name + ")"
+                                
+                                let viewPoint = ViewPoint(coordinate: CLLocationCoordinate2D(latitude: latitude!, longitude: longitude!), title: title, subtitle: subtitle)
+                                
+                                annotation.append(viewPoint)
+                                
+                                if (annotation.count == dataList.count) {
+                                    self.mapView.showAnnotations(annotation, animated: true)
+                                    
+                                    self.mapView.mapType = MKMapType.hybrid
+                                    self.setEnables(hybrid: false, standard: true, satellite: true)
+                                }
+                            }
+                        })
+                    } else {
+                        return
+                    }
+                })
             }
         }
-        
-        mapView.showAnnotations(annotation, animated: true)
-            
-        mapView.mapType = MKMapType.hybrid
-        setEnables(hybrid: false, standard: true, satellite: true)
     }
     
     public func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
@@ -46,23 +78,26 @@ class ViewController: UIViewController, MKMapViewDelegate {
             annotationView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: identifier)
             
             annotationView?.canShowCallout = true
-            annotationView?.pinTintColor = UIColor.orange
             annotationView?.animatesDrop = true
             
             var imageData = "DIT.jpg"
-            var imageFrame = CGRect(x: 0, y: 0, width: 100, height: 30)
+            var imageFrame = CGRect(x: 0, y: 0, width: 120, height: 30)
+            annotationView?.pinTintColor = UIColor.red
             
-            let subtitle = annotation.subtitle
+            let title = annotation.title
             
-            if subtitle == "DIT" {
+            if title == "동의과학대학교" {
                 imageData = "DIT.jpg"
-                imageFrame = CGRect(x: 0, y: 0, width: 100, height: 30)
-            } else if subtitle == "BWU" {
+                imageFrame = CGRect(x: 0, y: 0, width: 120, height: 30)
+                annotationView?.pinTintColor = UIColor.red
+            } else if title == "부산여자대학교" {
                 imageData = "BWU.png"
                 imageFrame = CGRect(x: 0, y: 0, width: 100, height: 30)
+                annotationView?.pinTintColor = UIColor.green
             } else {
                 imageData = "BGU.jpeg"
                 imageFrame = CGRect(x: 0, y: 0, width: 30, height: 30)
+                annotationView?.pinTintColor = UIColor.purple
             }
             
             let img = UIImageView(image: UIImage(named: imageData))
@@ -77,31 +112,6 @@ class ViewController: UIViewController, MKMapViewDelegate {
         
         return annotationView
     }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     
     public func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
         if (control.state.rawValue == 1) {
